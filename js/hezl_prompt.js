@@ -201,7 +201,7 @@ const HEZL_PROMPT_CSS = `
 
 .hezl-prompt-sidebar {
     flex: 0 0 auto;
-    width: 35%;
+    width: 40%;
     min-width: 160px;
     background: #232326; /* 左侧边栏略微提亮 */
     display: flex;
