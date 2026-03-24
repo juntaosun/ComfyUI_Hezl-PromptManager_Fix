@@ -10,6 +10,7 @@ class HezlPromptNode:
             "optional": {
                 # 核心修复 1：使用 "forceInput": True 强制让它成为一个连线输入点，而不是文本输入框
                 "prompt": ("STRING", {"forceInput": True}),
+                "prompt_end": ("STRING", {"forceInput": True}),
             },
             "hidden": {
                 "prompt_id": "UNIQUE_ID",
@@ -22,7 +23,7 @@ class HezlPromptNode:
     CATEGORY = "Hezl-Node/Prompt"
     OUTPUT_NODE = True
 
-    def generate_prompt(self, selected_prompts, prompt=None, prompt_id=None):
+    def generate_prompt(self, selected_prompts, prompt=None, prompt_end=None, prompt_id=None):
         try:
             data = json.loads(selected_prompts)
             prompts = data.get("prompts", [])
@@ -52,9 +53,13 @@ class HezlPromptNode:
                     formatted = content
                 result_parts.append(formatted)
             
-            # 核心修复 3：确保传入的 prompt 不是空字符串或纯空格，避免生成多余的逗号
+            # 添加到开头 3：确保传入的 prompt 不是空字符串或纯空格，避免生成多余的逗号
             if prompt and isinstance(prompt, str) and prompt.strip():
                 result_parts.insert(0, prompt.strip())
+                
+            # 添加到结尾 3：确保传入的 prompt 不是空字符串或纯空格，避免生成多余的逗号
+            if prompt_end and isinstance(prompt_end, str) and prompt_end.strip():
+                result_parts.append(prompt_end.strip())
                 
             result = ", ".join(result_parts)
             return (result,)

@@ -1,98 +1,9 @@
 {
   "id": "61ff0ba5-6474-4a20-9332-0dac84bd2fe4",
   "revision": 0,
-  "last_node_id": 5,
-  "last_link_id": 4,
+  "last_node_id": 6,
+  "last_link_id": 5,
   "nodes": [
-    {
-      "id": 4,
-      "type": "HezlPrompt",
-      "pos": [
-        177.72406918759228,
-        3766.880441303365
-      ],
-      "size": [
-        473.5278243641568,
-        384.79199084820493
-      ],
-      "flags": {},
-      "order": 1,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "prompt",
-          "shape": 7,
-          "type": "STRING",
-          "link": 4
-        }
-      ],
-      "outputs": [
-        {
-          "name": "prompt",
-          "type": "STRING",
-          "links": [
-            3
-          ]
-        }
-      ],
-      "properties": {
-        "aux_id": "Hezldeen/ComfyUI_Hezl-PromptManager",
-        "ver": "eb386fc0f39e56179771d995a54fd815277f4c02",
-        "Node name for S&R": "HezlPrompt",
-        "ue_properties": {
-          "version": "7.0.1",
-          "widget_ue_connectable": {}
-        }
-      },
-      "widgets_values": [
-        "{\"prompts\":[],\"weights\":{},\"disabled\":{}}",
-        "{\"prompts\":[],\"weights\":{},\"disabled\":{}}"
-      ]
-    },
-    {
-      "id": 2,
-      "type": "ShowText|pysssss",
-      "pos": [
-        682.4467045351503,
-        3818.6518301670926
-      ],
-      "size": [
-        210,
-        106.3997625666675
-      ],
-      "flags": {},
-      "order": 2,
-      "mode": 0,
-      "inputs": [
-        {
-          "label": "文本",
-          "name": "text",
-          "type": "STRING",
-          "link": 3
-        }
-      ],
-      "outputs": [
-        {
-          "label": "字符串",
-          "name": "STRING",
-          "shape": 6,
-          "type": "STRING",
-          "links": null
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfyui-custom-scripts",
-        "ver": "1.2.5",
-        "Node name for S&R": "ShowText|pysssss",
-        "ue_properties": {
-          "version": "7.0.1",
-          "widget_ue_connectable": {}
-        }
-      },
-      "widgets_values": [
-        "你好"
-      ]
-    },
     {
       "id": 3,
       "type": "PrimitiveStringMultiline",
@@ -129,8 +40,144 @@
         }
       },
       "widgets_values": [
-        "你好"
+        "添加到开头"
       ]
+    },
+    {
+      "id": 4,
+      "type": "HezlPrompt",
+      "pos": [
+        177.72406918759228,
+        3766.880441303365
+      ],
+      "size": [
+        598.1478775130961,
+        610.1151652677795
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "prompt",
+          "shape": 7,
+          "type": "STRING",
+          "link": 4
+        },
+        {
+          "name": "prompt_end",
+          "shape": 7,
+          "type": "STRING",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "Hezldeen/ComfyUI_Hezl-PromptManager",
+        "ver": "eb386fc0f39e56179771d995a54fd815277f4c02",
+        "Node name for S&R": "HezlPrompt",
+        "ue_properties": {
+          "version": "7.0.1",
+          "widget_ue_connectable": {}
+        }
+      },
+      "widgets_values": [
+        "{\"prompts\":[],\"weights\":{},\"disabled\":{},\"ui_state\":{\"expandedFolders\":[],\"currentFolder\":\"\",\"currentFolderType\":\"\"}}",
+        ""
+      ]
+    },
+    {
+      "id": 6,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -68.45973927969015,
+        3990.563640790383
+      ],
+      "size": [
+        210,
+        100.99621716024376
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.17.0",
+        "Node name for S&R": "PrimitiveStringMultiline",
+        "ue_properties": {
+          "version": "7.0.1",
+          "widget_ue_connectable": {
+            "value": true
+          }
+        }
+      },
+      "widgets_values": [
+        "添加到结尾"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "ShowText|pysssss",
+      "pos": [
+        809.5843249115883,
+        3823.0576160322853
+      ],
+      "size": [
+        229.51121083871726,
+        273.1892180359491
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "文本",
+          "name": "text",
+          "type": "STRING",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "label": "字符串",
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "1.2.5",
+        "Node name for S&R": "ShowText|pysssss",
+        "ue_properties": {
+          "version": "7.0.1",
+          "widget_ue_connectable": {}
+        }
+      },
+      "widgets_values": [
+        "添加到开头, 添加到结尾"
+      ],
+      "color": "#233",
+      "bgcolor": "#355"
     }
   ],
   "links": [
@@ -149,6 +196,14 @@
       4,
       0,
       "STRING"
+    ],
+    [
+      5,
+      6,
+      0,
+      4,
+      1,
+      "STRING"
     ]
   ],
   "groups": [],
@@ -157,10 +212,10 @@
     "workflowRendererVersion": "LG",
     "ue_links": [],
     "ds": {
-      "scale": 1.061076460950001,
+      "scale": 1.4122927695244514,
       "offset": [
-        565.4128828612671,
-        -3446.4042233468
+        280.5653616268702,
+        -3595.618823400462
       ]
     },
     "links_added_by_ue": [],
