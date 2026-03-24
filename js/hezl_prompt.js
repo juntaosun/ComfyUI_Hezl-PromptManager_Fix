@@ -2,590 +2,545 @@ import { app } from "../../../scripts/app.js";
 import { ComfyWidgets } from "../../../scripts/widgets.js";
 
 const HEZL_PROMPT_CSS = `
-/* 1. 暗色滚动条全局样式定制 */
-.hezl-prompt-container ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-.hezl-prompt-container ::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 3px;
-}
-.hezl-prompt-container ::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 3px;
-}
-.hezl-prompt-container ::-webkit-scrollbar-thumb:hover {
-    background: #777;
-}
-
+/* 全局设定：暗色风格 */
 .hezl-prompt-container {
     display: flex;
     flex-direction: column;
     height: 600px;
-    background: #1e1e1e;
-    border-radius: 8px;
+    background: #1c1c1e; /* Dark Mode 底色 */
+    border-radius: 12px;
     overflow: hidden;
-    font-family: Arial, sans-serif;
-    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* 系统级抗锯齿字体 */
+    color: #e5e5ea;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid #000;
 }
 
+/* 精致的系统级滚动条 */
+.hezl-prompt-container ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.hezl-prompt-container ::-webkit-scrollbar-track {
+    background: transparent;
+}
+.hezl-prompt-container ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+.hezl-prompt-container ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+/* 顶部搜索栏与控制栏 */
 .hezl-search-container {
     display: flex;
-    gap: 4px;
-    padding: 6px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333;
-    flex-shrink: 0; /* 防止被挤压 */
+    gap: 8px;
+    padding: 8px 10px;
+    background: #252528;
+    border-bottom: 1px solid #111;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+    align-items: center;
+}
+
+/* 输入框与下拉框 - 焦点环风格 */
+.hezl-search-input, .hezl-search-select, .hezl-form-input, .hezl-form-textarea {
+    background: #151515;
+    border: 1px solid #333;
+    color: #dedede;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.hezl-search-input:focus, .hezl-search-select:focus, .hezl-form-input:focus, .hezl-form-textarea:focus {
+    border-color: #0a84ff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3), inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.hezl-form-input{
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.hezl-form-textarea{
+    width: 100%;
+    min-height: 200px;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    resize: vertical;
+    box-sizing: border-box;
 }
 
 .hezl-search-input {
     flex: 1;
     min-width: 0;
-    background: #222;
-    border: 1px solid #444;
+}
+
+/* 质感按钮 (线性渐变 + 内发光边缘) */
+.hezl-desc-btn {
+    padding: 5px 12px;
+    border: 1px solid #111;
+    border-top: 1px solid #555; /* 顶部高光 */
+    border-radius: 6px;
+    background: linear-gradient(180deg, #444, #333);
+    color: #eee;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    transition: all 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+    
+.hezl-btn {
+    padding: 5px 12px;
+    // height: 50px;
+    border: 1px solid #111;
+    border-top: 1px solid #555; /* 顶部高光 */
+    border-radius: 6px;
+    background: linear-gradient(180deg, #26a75b, #20914f);
+    color: #eee;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    transition: all 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.hezl-btn:hover {
+    background: linear-gradient(180deg, #2dc06a, #21a358);
+    border-top: 1px solid #666;
+}
+
+.hezl-btn:active {
+    background: #2a2a2a;
+    border-top: 1px solid #111;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+    transform: translateY(1px);
+}
+
+/* 颜色变体按钮 */
+.hezl-btn.success {
+    background: linear-gradient(180deg, #26a75b, #20914f);
+    border-top: 1px solid #58d68d;
     color: #fff;
-    padding: 4px 6px;
-    border-radius: 3px;
-    font-size: 11px;
+}
+.hezl-btn.success:hover { 
+    background: linear-gradient(180deg, #2dc06a, #21a358);
 }
 
-.hezl-search-input:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-.hezl-search-select {
-    background: #222;
-    border: 1px solid #444;
+.hezl-btn.danger {
+    background: linear-gradient(180deg, #e74c3c, #c0392b);
+    border-top: 1px solid #f1948a;
     color: #fff;
-    padding: 4px;
-    border-radius: 3px;
-    font-size: 11px;
-    outline: none;
+}
+.hezl-btn.danger:hover { background: linear-gradient(180deg, #ee5242, #e74c3c); }
+
+.hezl-btn.warning {
+    background: linear-gradient(180deg, #f39c12, #d68910);
+    border-top: 1px solid #f8c471;
+    color: #fff;
+}
+.hezl-btn.warning:hover { background: linear-gradient(180deg, #f4a62a, #e67e22); }
+
+.hezl-btn.small {
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 4px;
 }
 
-.hezl-search-select:focus {
-    border-color: #3498db;
+.hezl-btn.cancel {
+    padding: 5px 12px;
+    // height: 50px;
+    border: 1px solid #111;
+    border-top: 1px solid #555; /* 顶部高光 */
+    border-radius: 6px;
+    background: linear-gradient(180deg, #858585, #616161);
+    color: #eee;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.5);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    transition: all 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
 }
 
+/* 分割面板区域 */
 .hezl-prompt-top {
     display: flex;
     flex: 1;
     min-height: 0;
-    border-bottom: 1px solid #444;
-}
-
-.hezl-prompt-bottom {
-    flex: 0 0 200px;
-    min-height: 120px;
-    padding: 8px;
-    overflow-y: auto;
-    background: #252525;
+    background: #1e1e1e;
 }
 
 .hezl-prompt-sidebar {
     flex: 0 0 auto;
-    width: 45%;
-    min-width: 140px;
-    border-right: 1px solid #444;
-    overflow: hidden; /* 修复1：去掉整体滚动，改为隐藏溢出 */
-    background: #1a1a1a;
+    width: 35%;
+    min-width: 160px;
+    background: #232326; /* 左侧边栏略微提亮 */
     display: flex;
     flex-direction: column;
 }
 
 .hezl-prompt-list {
     flex: 1;
-    min-height: 0; /* 修复3：解决 Flex 子项无法滚动的问题 */
+    min-height: 0; 
     min-width: 200px;
     overflow-y: auto;
-    padding: 6px;
-    background: #222;
+    padding: 12px;
+    background: #1c1c1e;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    gap: 6px;
+    gap: 8px;
 }
 
-.hezl-splitter-vertical {
-    width: 4px;
-    cursor: col-resize;
-    background: #333;
-    flex: 0 0 4px;
+.hezl-prompt-bottom {
+    flex: 0 0 200px;
+    min-height: 140px;
+    padding: 0;
+    overflow-y: hidden;
+    background: #252528;
     display: flex;
-    align-items: center;
+    flex-direction: column;
 }
 
-.hezl-splitter-vertical:hover {
-    background: #3d3d3d;
-}
-
-.hezl-splitter-vertical::after {
-    content: "";
-    display: block;
+/* 优雅的分割线 (Hover时才显示提示) */
+.hezl-splitter-vertical {
     width: 2px;
-    height: 24px;
-    background-image: radial-gradient(#777 1px, transparent 1px);
-    background-size: 2px 4px;
-    background-position: center;
+    cursor: col-resize;
+    background: #000;
+    position: relative;
+    z-index: 10;
+}
+.hezl-splitter-vertical:hover, .hezl-splitter-vertical:active {
+    background: #0a84ff;
+    box-shadow: 0 0 4px #0a84ff;
 }
 
 .hezl-splitter-horizontal {
-    height: 4px;
+    height: 10px;
     cursor: row-resize;
-    background: #333;
-    flex: 0 0 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: #000;
+    position: relative;
+    z-index: 10;
+}
+.hezl-splitter-horizontal:hover, .hezl-splitter-horizontal:active {
+    background: #0a84ff;
+    box-shadow: 0 0 4px #0a84ff;
 }
 
-.hezl-splitter-horizontal:hover {
-    background: #3d3d3d;
-}
-
-.hezl-splitter-horizontal::after {
-    content: "";
-    display: block;
-    width: 24px;
-    height: 2px;
-    background-image: radial-gradient(#777 1px, transparent 1px);
-    background-size: 4px 2px;
-    background-position: center;
-}
-
+/* 树形列表优化 */
 .hezl-folder-tree {
-    padding: 4px;
+    padding: 6px;
     flex: 1;
-    min-height: 0; /* 修复1：允许内部滚动 */
-    overflow-y: auto; /* 修复1：树形列表独立滚动 */
+    min-height: 0; 
+    overflow-y: auto; 
 }
 
 .hezl-folder-item {
     cursor: pointer;
-    padding: 3px 6px;
-    margin: 1px 0;
-    border-radius: 3px;
+    padding: 5px 8px;
+    margin: 2px 0;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition: background 0.2s;
-    font-size: 11px;
+    font-size: 12px;
+    color: #c7c7cc;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
 }
 
 .hezl-folder-item:hover {
-    background: #333;
+    background: rgba(255,255,255,0.05);
 }
 
 .hezl-folder-item.selected {
-    background: #3a3a3a;
+    background: #0a84ff;
+    color: #fff;
+    border: 1px solid #0060cc;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.2);
 }
 
 .hezl-folder-icon {
-    margin-right: 4px;
-    font-size: 10px;
+    margin-right: 6px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.hezl-folder-item.selected .hezl-folder-icon {
+    opacity: 1;
 }
 
 .hezl-folder-name {
     flex: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
+/* 计数角标 */
 .hezl-folder-count {
-    background: #e74c3c;
+    background: #ff453a;
     color: white;
-    border-radius: 8px;
-    padding: 1px 5px;
-    font-size: 9px;
+    border-radius: 12px;
+    padding: 1px 6px;
+    font-size: 12px;
+    font-weight: bold;
     cursor: pointer;
-    min-width: 14px;
+    min-width: 16px;
     text-align: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
-
-.hezl-folder-count:hover::after {
-    content: '✕';
-}
-
 .hezl-folder-count:hover {
-    background: #c0392b;
+    background: #d63026;
 }
 
-.hezl-prompt-item {
-    background: #2a2a2a;
-    border-radius: 4px;
-    padding: 5px 8px;
-    margin: 3px 0;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-left: 2px solid #3498db;
-    font-size: 11px;
+/* 词组胶囊 - 3D质感 */
+.hezl-prompt-item-wrapper {
+    display: inline-flex;
+    align-items: stretch;
+    background: linear-gradient(180deg, #3a3a3c, #2c2c2e);
+    border-radius: 8px;
+    margin: 0;
+    border: 1px solid #111;
+    border-top: 1px solid #4a4a4c;
+    overflow: hidden;
+    transition: all 0.15s ease;
+    cursor: grab;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
 }
 
-.hezl-prompt-item:hover {
-    background: #333;
+.hezl-prompt-item-wrapper:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    border-top-color: #5a5a5c;
 }
 
-.hezl-prompt-item.selected {
-    border-left-color: #27ae60;
-    background: #2d3748;
+.hezl-prompt-item-wrapper.selected {
+    background: linear-gradient(180deg, #0a84ff, #0060cc);
+    border-top: 1px solid #4eb4ff;
+    border-color: #004088;
 }
 
-.hezl-prompt-item.dragging {
+.hezl-prompt-item-wrapper.dragging {
     opacity: 0.5;
-    transform: scale(0.98);
+    transform: scale(0.95);
+}
+
+.hezl-prompt-item-wrapper.drag-over {
+    border-color: #32d74b;
+}
+
+/* 拖拽插入提示线 (发光效果) */
+.hezl-prompt-item-wrapper.insert-before {
+    box-shadow: -3px 0 0 #32d74b, 0 0 8px rgba(50, 215, 75, 0.5);
+}
+.hezl-prompt-item-wrapper.insert-after {
+    box-shadow: 3px 0 0 #32d74b, 0 0 8px rgba(50, 215, 75, 0.5);
+}
+
+.hezl-prompt-item-content {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 2px;
 }
 
 .hezl-prompt-title {
-    font-weight: normal;
-    font-size: 11px;
-    background: #666666;
-    color: #e6ffe6;
-    padding: 4px 10px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #bdbdbd;
+    padding: 5px 10px;
     flex-shrink: 0;
     white-space: nowrap;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.4);
 }
 
-.hezl-prompt-capsule {
+.hezl-prompt-title.selected {
+    color: #eeeeee;
+}
+
+
+.hezl-prompt-edit-btn {
+    display: none;
+}
+
+.hezl-sidebar-actions {
     display: flex;
-    align-items: stretch;
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 4px 0;
-    border: 1px solid #333;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s, transform 0.15s;
-    font-size: 11px;
+    gap: 2px;
+    margin-left: auto;
 }
 
-.hezl-prompt-capsule:hover {
-    border-color: #3d3d3d;
-    background: #262626;
+/* 栏目标题 */
+.hezl-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 0.5px;
+    color: #8e8e93;
+    padding: 6px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #002741;
+    border-bottom: 1px solid #111;
+    z-index: 2;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    user-select: none;
 }
 
-.hezl-prompt-capsule.selected {
-    border-color: #27ae60;
-    box-shadow: inset 0 0 0 1px rgba(39, 174, 96, 0.3);
+.hezl-section-title.library {
+    background: #1c1d1e;
 }
 
-.hezl-capsule-title {
-    background: #3a3a3a;
-    color: #ddd;
-    padding: 4px 8px;
-    min-width: 60px;
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: bold;
-}
-
-.hezl-capsule-content {
-    flex: 1;
-    background: #1f6f3d;
-    color: #e6ffe6;
-    padding: 4px 8px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
+/* 底部已选区域预览 */
 .hezl-preview-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 6px;
     min-height: 40px;
-    padding: 6px;
-    background: #1a1a1a;
-    border-radius: 4px;
+    overflow-y: auto;
+    padding: 12px;
+    background: #1e1e1e;
+    align-content: flex-start;
+    user-select: none;
 }
 
 .hezl-preview-item {
-    background: #4a4a4a;
-    border-radius: 12px;
-    border: 1px solid #555;
+    background: linear-gradient(180deg, #3a3a3c, #2c2c2e);
+    border-radius: 6px;
+    border: 1px solid #111;
+    border-top: 1px solid #4a4a4c;
     cursor: grab;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 0;
     overflow: hidden;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
-    font-size: 11px;
+    transition: all 0.15s ease;
+    font-size: 12px;
     user-select: none;
-    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     height: 24px;
 }
 
 .hezl-preview-item:hover {
-    border-color: #666;
-    background: #5a5a5a;
-}
-
-.hezl-preview-item.dragging {
-    opacity: 0.6;
-    cursor: grabbing;
-    transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    z-index: 100;
-    background: #4a4a4a;
-}
-
-.hezl-preview-item.drag-over {
-    border: 1px dashed #fff;
-    transform: scale(1.02);
-}
-
-.hezl-preview-item.insert-before {
-    border-left: 2px solid #27ae60;
-    padding-left: 6px;
-}
-
-.hezl-preview-item.insert-after {
-    border-right: 2px solid #27ae60;
-    padding-right: 6px;
-}
-
-.hezl-preview-item.disabled {
-    opacity: 0.6;
-}
-
-.hezl-preview-item.disabled:hover {
-    border-color: #555;
-}
-
-.hezl-preview-title {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: #3a3a3a;
-    color: #ddd;
-    padding: 4px 6px;
-    min-width: 60px;
-    max-width: 140px;
-}
-
-.hezl-preview-weight {
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    background: #2a5298;
-    color: #fff;
-    padding: 4px 6px;
-}
-
-.hezl-preview-item.disabled .hezl-preview-weight {
-    background: #555;
-    color: #bbb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 
 .hezl-preview-text {
     order: 1;
-    padding: 0 6px;
-    color: #ddd;
-    height: 100%;
+    padding: 0 8px;
+    color: #fff;
     display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    white-space: nowrap;
+    font-weight: 500;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.4);
 }
 
+/* 权重调节控制器 (类似分段选择器) */
 .hezl-weight-control {
     display: flex;
     align-items: center;
-    gap: 3px;
-    background: #2a5298;
-    color: #fff;
-    padding: 0 6px;
+    background: rgba(0,0,0,0.2);
+    border-left: 1px solid #111;
+    border-right: 1px solid #111;
     order: 2;
-    height: 100%;
-}
-
-.hezl-preview-item.disabled .hezl-weight-control {
-    background: #555;
-    color: #bbb;
+    padding: 0 2px;
 }
 
 .hezl-weight-btn {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 18px;
     border: none;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.15);
+    background: transparent;
     color: #fff;
     cursor: pointer;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    transition: background 0.15s, transform 0.1s;
+    transition: background 0.15s;
+    border-radius: 3px;
 }
-
-.hezl-weight-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-.hezl-weight-btn:active {
-    transform: scale(0.9);
-}
+.hezl-weight-btn:hover { background: rgba(255,255,255,0.15); }
+.hezl-weight-btn:active { background: rgba(0,0,0,0.3); }
 
 .hezl-weight-value {
-    font-size: 9px;
-    min-width: 24px;
+    font-size: 12px;
+    min-width: 26px;
     text-align: center;
-    color: #fff;
+    color: #64d2ff;
+    font-family: monospace;
+    font-weight: bold;
 }
 
 .hezl-remove-btn {
-    width: 12px;
-    height: 12px;
+    width: 24px;
     border: none;
-    border-radius: 50%;
-    background: rgba(231, 76, 60, 0.7);
-    color: #fff;
+    background: rgba(255, 69, 58, 0.1);
+    color: #ff453a;
     cursor: pointer;
-    font-size: 8px;
-    margin: 0 4px 0 6px;
-    order: 0;
+    font-size: 12px;
+    order: 3;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
-    transition: background 0.15s, transform 0.1s;
-    opacity: 0.7;
+    transition: all 0.15s;
 }
-
 .hezl-remove-btn:hover {
-    background: #e74c3c;
-    opacity: 1;
+    background: #ff453a;
+    color: #fff;
 }
 
-.hezl-remove-btn:active {
-    transform: scale(0.85);
+/* 禁用状态 */
+.hezl-preview-item.disabled {
+    opacity: 0.4;
+    filter: grayscale(100%);
 }
+.hezl-preview-item.disabled:hover { opacity: 0.6; }
 
-.hezl-toolbar {
+/* 拖拽视觉提示 */
+.hezl-preview-item.insert-before { box-shadow: -3px 0 0 #32d74b; }
+.hezl-preview-item.insert-after { box-shadow: 3px 0 0 #32d74b; }
+
+.hezl-preview-actions {
     display: flex;
     gap: 6px;
-    padding: 6px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #444;
-    flex-wrap: wrap;
-}
-
-.hezl-btn {
-    padding: 4px 10px;
-    border: none;
-    border-radius: 3px;
-    background: #3498db;
-    color: #fff;
-    cursor: pointer;
-    font-size: 11px;
-    transition: background 0.2s;
-}
-
-.hezl-btn:hover {
-    background: #2980b9;
-}
-
-.hezl-btn.success {
-    background: #27ae60;
-}
-
-.hezl-btn.success:hover {
-    background: #219a52;
-}
-
-.hezl-btn.danger {
-    background: #e74c3c;
-}
-
-.hezl-btn.danger:hover {
-    background: #c0392b;
-}
-
-.hezl-btn.warning {
-    background: #f39c12;
-}
-
-.hezl-btn.warning:hover {
-    background: #d68910;
-}
-
-.hezl-btn.small {
-    padding: 2px 6px;
-    font-size: 10px;
-}
-
-.hezl-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-
-.hezl-modal-content {
-    background: #2a2a2a;
-    border-radius: 8px;
-    padding: 20px;
-    width: 400px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.hezl-modal-header {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #444;
-}
-
-.hezl-form-group {
-    margin-bottom: 15px;
-}
-
-.hezl-form-label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: #aaa;
-}
-
-.hezl-form-input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #444;
-    border-radius: 4px;
-    background: #1a1a1a;
-    color: #fff;
-    font-size: 13px;
-    box-sizing: border-box;
-}
-
-.hezl-form-input:focus {
-    outline: none;
-    border-color: #3498db;
-}
-
-.hezl-form-textarea {
-    width: 100%;
-    min-height: 80px;
-    padding: 8px;
-    border: 1px solid #444;
-    border-radius: 4px;
-    background: #1a1a1a;
-    color: #fff;
-    font-size: 13px;
-    resize: vertical;
-    box-sizing: border-box;
+    padding: 6px 10px;
+    background: #252528;
+    border-bottom: 1px solid #111;
 }
 
 .hezl-modal-actions {
@@ -599,190 +554,172 @@ const HEZL_PROMPT_CSS = `
     text-align: center;
     padding: 30px;
     color: #666;
-    font-size: 11px;
+    font-size: 12px;
+    user-select: none;
 }
 
+/* 最终输出代码框 */
 .hezl-output-text {
-    background: #1a1a1a;
-    border-radius: 4px;
-    padding: 8px;
-    margin-top: 8px;
-    font-family: monospace;
-    font-size: 11px;
-    word-break: break-all;
+    background: #000;
+    border-top: 1px solid #333;
+    padding: 6px 10px;
+    margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12px;
     color: #27ae60;
+    flex:1;
+    overflow-y: auto;
+    word-break: break-all;
 }
 
-.hezl-section-title {
-    font-size: 11px;
-    font-weight: bold;
-    margin-bottom: 4px;
-    color: #aaa;
-    padding: 4px 6px;
+/* 底部状态栏 */
+.hezl-footer {
+    padding: 4px 10px;
+    background: #111;
+    color: #949494;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border-top: 1px solid #000;
+    flex-shrink: 0;
+}
+
+/* CSV 注释面板 */
+.hezl-csv-description {
+    padding: 8px 12px;
+    background: #252528;
+    border-bottom: 1px solid #111;
+    font-size: 12px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    position: sticky;
+    align-items: flex-start;
+    gap: 12px;
+    color: #aeaeb2;
+}
+
+/* ====== 高级玻璃态弹窗 (Glassmorphism Modal) ====== */
+.hezl-modal {
+    position: fixed;
     top: 0;
-    background: #1a1a1a;
-    z-index: 2;
-    flex-shrink: 0; /* 防止被挤压 */
-}
-
-.hezl-sidebar-actions {
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px); /* 毛玻璃背景 */
     display: flex;
-    gap: 2px;
-    margin-left: auto;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.15s ease-out;
 }
 
-.hezl-sidebar-actions .hezl-btn {
-    padding: 2px 5px;
-    font-size: 10px;
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-#hezl-add-prompt,
-#hezl-add-csv,
-#hezl-add-folder,
-#hezl-delete-folder,
-#hezl-rename-folder {
-    display: none;
+.hezl-modal-content {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 24px;
+    width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+    animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@keyframes slideUp {
+    from { transform: translateY(20px) scale(0.98); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.hezl-modal-header {
+    font-size: 18px;
+    font-weight: bold;
+    font-weight: 600;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #333;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.hezl-form-group {
+    margin-bottom: 16px;
+}
+
+.hezl-form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: #8e8e93;
+    font-weight: 500;
+}
+
+/* 树状折叠图标 */
 .hezl-tree-toggle {
     display: inline-block;
-    width: 12px;
+    width: 14px;
     cursor: pointer;
     text-align: center;
-    font-size: 8px;
+    font-size: 12px;
+    color: #8e8e93;
+    transition: color 0.2s;
 }
+.hezl-tree-toggle:hover { color: #fff; }
 
 .hezl-folder-children {
     overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 .hezl-folder-children.collapsed {
     max-height: 0 !important;
 }
 
-.hezl-hover-preview {
-    position: fixed;
-    z-index: 10002;
-    background: #2a2a2a;
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    max-width: 300px;
-}
-
-.hezl-hover-preview img {
-    max-width: 280px;
-    max-height: 200px;
-    border-radius: 4px;
-    display: block;
-}
-
-.hezl-hover-preview-text {
-    font-size: 11px;
-    color: #aaa;
-    margin-top: 6px;
-    word-break: break-all;
-}
-
-.hezl-preview-actions {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 6px;
-}
-
+/* 右键菜单 */
 .hezl-context-menu {
     position: fixed;
-    background: #2a2a2a;
-    border: 1px solid #444;
-    border-radius: 4px;
-    padding: 4px 0;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 5px 0;
     z-index: 10003;
-    min-width: 120px;
+    min-width: 140px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .hezl-context-menu-item {
-    padding: 6px 12px;
+    padding: 6px 16px;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 12px;
+    color: #dedede;
+    transition: background 0.1s;
 }
 
 .hezl-context-menu-item:hover {
-    background: #3498db;
+    background: #0a84ff;
+    color: #fff;
 }
 
-.hezl-prompt-item-wrapper {
-    display: inline-flex;
-    align-items: center;
-    background: #222;
-    border-radius: 12px;
-    margin: 0;
-    border: 1px solid #333;
-    overflow: hidden;
-    transition: all 0.2s;
-    cursor: grab;
+/* 悬浮大图预览面板 */
+.hezl-hover-preview {
+    position: fixed;
+    z-index: 10002;
+    background: rgba(28, 28, 30, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+    max-width: 320px;
 }
-
-.hezl-prompt-item-wrapper:hover {
-    border-color: #3d3d3d;
-}
-
-.hezl-prompt-item-wrapper.selected {
-    border-color: #555;
-    box-shadow: none;
-    background: #4a4a4a;
-}
-
-.hezl-prompt-item-wrapper.selected .hezl-prompt-title {
-    background: #27ae60;
-    color: #ffffffff;
-}
-
-.hezl-prompt-item-wrapper.dragging {
-    opacity: 0.5;
-    transform: scale(0.98);
-}
-
-.hezl-prompt-item-wrapper.drag-over {
-    border-color: #27ae60;
-}
-
-.hezl-prompt-item-wrapper.insert-before {
-    box-shadow: inset 2px 0 0 #27ae60;
-}
-
-.hezl-prompt-item-wrapper.insert-after {
-    box-shadow: inset -2px 0 0 #27ae60;
-}
-
-.hezl-prompt-item-content {
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.hezl-prompt-edit-btn {
-    display: none;
-}
-
-.hezl-prompt-edit-btn:hover {
-    background: #2980b9;
-}
-
-/* 修复4：底部路径提示 CSS */
-.hezl-footer {
-    padding: 3px 8px;
-    background: #151515;
-    color: #666;
-    font-size: 10px;
-    border-top: 1px solid #333;
-    text-align: left;
-    flex-shrink: 0;
+.hezl-hover-preview-text {
+    font-size: 12px;
+    color: #e5e5ea;
+    line-height: 1.4;
+    word-break: break-word;
 }
 `;
 
@@ -795,11 +732,13 @@ class HezlPromptWidget {
         this.promptDisabled = {};
         this.folderStructure = null;
         this.currentFolder = "";
+        this.currentFolderType = "";
         this.promptsData = [];
         this.folderSelectedCounts = {};
         this.expandedFolders = new Set();
         this.hoverPreview = null;
         this.contextMenu = null;
+        this.uiState = null; 
         
         this.injectStyles();
         this.createWidget();
@@ -833,6 +772,63 @@ class HezlPromptWidget {
         });
     }
 
+    saveStateToWidget() {
+        if (this.node && this.node.widgets) {
+            const origWidget = this.node.widgets.find(w => w.name === 'selected_prompts');
+            if (origWidget) {
+                origWidget.value = JSON.stringify({
+                    prompts: this.selectedPrompts || [],
+                    weights: this.promptWeights || {},
+                    disabled: this.promptDisabled || {},
+                    ui_state: {
+                        expandedFolders: Array.from(this.expandedFolders || []),
+                        currentFolder: this.currentFolder || '',
+                        currentFolderType: this.currentFolderType || ''
+                    }
+                });
+            }
+        }
+    }
+
+    loadStateFromValue(value) {
+        try {
+            if (!value || typeof value !== 'string') return;
+            const data = JSON.parse(value);
+            
+            this.selectedPrompts = data.prompts || [];
+            this.promptWeights = {};
+            this.promptDisabled = {};
+            this.uiState = data.ui_state || null; 
+            
+            const migrateState = (sourceObj, targetObj) => {
+                if (!sourceObj) return;
+                for (let k in sourceObj) {
+                    if (k.includes('::')) {
+                        targetObj[k] = sourceObj[k];
+                    } else {
+                        const p = this.selectedPrompts.find(p => p.title === k);
+                        if (p) {
+                            targetObj[this.getUid(p)] = sourceObj[k];
+                        } else {
+                            targetObj[k] = sourceObj[k];
+                        }
+                    }
+                }
+            };
+            
+            migrateState(data.weights, this.promptWeights);
+            migrateState(data.disabled, this.promptDisabled);
+            
+            this.syncSelectionState();
+            
+            if (this.folderStructure) {
+                this.restoreUiState();
+            }
+        } catch (e) {
+            console.warn("Hezl Prompt Manager restore state error:", e);
+        }
+    }
+
     createWidget() {
         this.container = document.createElement('div');
         this.container.className = 'hezl-prompt-container';
@@ -841,13 +837,13 @@ class HezlPromptWidget {
             <div class="hezl-prompt-top" id="hezl-prompt-top">
                 <div class="hezl-prompt-sidebar" id="hezl-prompt-sidebar">
                     <div class="hezl-search-container">
-                        <input type="text" class="hezl-search-input" id="hezl-folder-search" placeholder="搜索文件...">
+                        <input type="text" class="hezl-search-input" id="hezl-folder-search" placeholder="🔍 搜索文件...">
                     </div>
-                    <div class="hezl-section-title">
-                        <span>分类目录</span>
+                    <div class="hezl-section-title library">
+                        <span>LIBRARY / 目录</span>
                         <div class="hezl-sidebar-actions">
-                            <button class="hezl-btn small" id="hezl-add-root-folder" title="在根目录csv文件夹下创建文件夹">+文件夹</button>
-                            <button class="hezl-btn small" id="hezl-refresh" title="刷新">↻</button>
+                            <button class="hezl-btn small" id="hezl-add-root-folder" title="在根目录csv文件夹下创建文件夹">+ 文件夹</button>
+                            <button class="hezl-btn small" id="hezl-refresh" title="刷新">⟳</button>
                         </div>
                     </div>
                     <div class="hezl-folder-tree" id="hezl-folder-tree"></div>
@@ -855,22 +851,29 @@ class HezlPromptWidget {
                 <div class="hezl-splitter-vertical" id="hezl-splitter-vertical"></div>
                 
                 <div style="display: flex; flex-direction: column; flex: 1; min-width: 200px; min-height: 0;">
-                    <div class="hezl-search-container" style="border-bottom: 1px solid #444;">
+                    <div class="hezl-search-container" style="border-bottom: 1px solid #111; align-items: center;">
                         <select class="hezl-search-select" id="hezl-prompt-search-type">
-                            <option value="title">按标题过滤</option>
-                            <option value="content">按内容过滤</option>
+                            <option value="title">按标题</option>
+                            <option value="content">按内容</option>
                         </select>
-                        <input type="text" class="hezl-search-input" id="hezl-prompt-search" placeholder="搜索词组 (支持模糊匹配)...">
+                        <input type="text" class="hezl-search-input" id="hezl-prompt-search" placeholder="🔍 搜索词组 (支持模糊匹配)...">
+                        <button class="hezl-btn success small" id="hezl-add-prompt-btn" style="display: none; flex-shrink: 0;">+ 添加词组</button>
                     </div>
+                    
+                    <div id="hezl-csv-description" class="hezl-csv-description" style="display: none;">
+                        <span class="text"></span>
+                        <button class="hezl-desc-btn small" id="hezl-edit-desc-btn" style="flex-shrink: 0;">编辑说明</button>
+                    </div>
+
                     <div class="hezl-prompt-list" id="hezl-prompt-list">
-                        <div class="hezl-empty-state">请选择左侧分类查看词组</div>
+                        <div style="text-align:center; padding: 40px; color:#666; font-size:12px; width:100%;">请在左侧选择一个 CSV 文件查看词组</div>
                     </div>
                 </div>
             </div>
             <div class="hezl-splitter-horizontal" id="hezl-splitter-horizontal"></div>
             <div class="hezl-prompt-bottom" id="hezl-prompt-bottom">
                 <div class="hezl-section-title">
-                    <span>已选词组预览 (可拖拽排序，点击调节权重，单击禁用/启用)</span>
+                    <span>SELECTED PROMPTS / 已选词组预览 (可拖拽排序，点击调节权重，单击禁用/启用)</span>
                 </div>
                 <div class="hezl-preview-actions">
                     <button class="hezl-btn small danger" id="hezl-remove-all">移除全部</button>
@@ -880,7 +883,7 @@ class HezlPromptWidget {
                 <div class="hezl-preview-container" id="hezl-preview-container"></div>
                 <div class="hezl-output-text" id="hezl-output-text"></div>
             </div>
-            <div class="hezl-footer">数据目录: ComfyUI/user/default/PromptManager/csv</div>
+            <div class="hezl-footer">数据目录: comfyui/user/default/promptmanager/csv</div>
         `;
         
         this.folderTree = this.container.querySelector('#hezl-folder-tree');
@@ -895,6 +898,21 @@ class HezlPromptWidget {
         
         this.setupEventListeners();
         this.setupSearchListeners(); 
+    }
+
+    restoreUiState() {
+        if (!this.uiState) return;
+        
+        if (this.uiState.expandedFolders) {
+            this.expandedFolders = new Set(this.uiState.expandedFolders);
+            this.renderFolderTree();
+        }
+        
+        if (this.uiState.currentFolder) {
+            this.selectFolder(this.uiState.currentFolder, this.uiState.currentFolderType);
+        }
+        
+        this.uiState = null; 
     }
     
     setupSearchListeners() {
@@ -1006,6 +1024,12 @@ class HezlPromptWidget {
             });
         }
         
+        this.container.querySelector('#hezl-add-prompt-btn').addEventListener('click', () => {
+            if (this.currentFolderType === 'csv') {
+                this.showAddPromptModal(this.currentFolder);
+            }
+        });
+
         this.container.querySelector('#hezl-remove-all').addEventListener('click', () => {
             this.removeAllPrompts();
         });
@@ -1120,6 +1144,11 @@ class HezlPromptWidget {
             const response = await fetch('/hezl_prompt/get_structure');
             this.folderStructure = await response.json();
             this.renderFolderTree();
+            
+            if (this.uiState) {
+                this.restoreUiState();
+            }
+            
             const searchInput = this.container.querySelector('#hezl-folder-search');
             if(searchInput && searchInput.value) {
                 this.filterFolderTree(searchInput.value.toLowerCase());
@@ -1172,7 +1201,7 @@ class HezlPromptWidget {
                 const countBadge = totalCount > 0 ? `<span class="hezl-folder-count" data-path="${node.path}" title="点击取消选择">${totalCount}</span>` : '';
                 const isSelected = this.currentFolder === node.path ? 'selected' : '';
                 
-                html += `<div class="hezl-folder-item ${isSelected}" data-path="${node.path}" data-type="folder" style="padding-left: ${indent * 12 + 4}px">
+                html += `<div class="hezl-folder-item ${isSelected}" data-path="${node.path}" data-type="folder" style="padding-left: ${indent * 12 + 6}px">
                     <span class="hezl-tree-toggle" data-path="${node.path}">${toggleIcon}</span>
                     <span class="hezl-folder-icon">${hasChildren ? (isExpanded ? '📂' : '📁') : '📁'}</span>
                     <span class="hezl-folder-name">${node.name}</span>
@@ -1189,7 +1218,7 @@ class HezlPromptWidget {
                 const countBadge = count > 0 ? `<span class="hezl-folder-count" data-path="${node.path}" title="点击取消选择">${count}</span>` : '';
                 const isSelected = this.currentFolder === node.path ? 'selected' : '';
                 
-                html += `<div class="hezl-folder-item ${isSelected}" data-path="${node.path}" data-type="csv" style="padding-left: ${indent * 12 + 4}px">
+                html += `<div class="hezl-folder-item ${isSelected}" data-path="${node.path}" data-type="csv" style="padding-left: ${indent * 12 + 6}px">
                     <span class="hezl-tree-toggle"></span>
                     <span class="hezl-folder-icon">📄</span>
                     <span class="hezl-folder-name">${node.name}</span>
@@ -1252,20 +1281,22 @@ class HezlPromptWidget {
         if (type === 'folder') {
             menuHtml = `
                 <div class="hezl-context-menu-item" data-action="add-folder">添加子文件夹</div>
-                <div class="hezl-context-menu-item" data-action="add-csv">新建CSV文件</div>
+                <div class="hezl-context-menu-item" data-action="add-csv">新建 CSV 文件</div>
+                <div style="border-top: 1px solid #333; margin: 4px 0;"></div>
                 <div class="hezl-context-menu-item" data-action="rename-folder">重命名</div>
-                <div class="hezl-context-menu-item" data-action="delete-folder">删除</div>
+                <div class="hezl-context-menu-item" data-action="delete-folder" style="color: #ff453a;">删除</div>
             `;
         } else if (type === 'csv') {
             menuHtml = `
                 <div class="hezl-context-menu-item" data-action="add-prompt">添加词组</div>
+                <div style="border-top: 1px solid #333; margin: 4px 0;"></div>
                 <div class="hezl-context-menu-item" data-action="rename-csv">重命名</div>
-                <div class="hezl-context-menu-item" data-action="delete-csv">删除</div>
+                <div class="hezl-context-menu-item" data-action="delete-csv" style="color: #ff453a;">删除</div>
             `;
         } else if (type === 'prompt') {
             menuHtml = `
                 <div class="hezl-context-menu-item" data-action="edit-prompt">编辑</div>
-                <div class="hezl-context-menu-item" data-action="delete-prompt">删除</div>
+                <div class="hezl-context-menu-item" data-action="delete-prompt" style="color: #ff453a;">删除</div>
             `;
         } else if (type === 'blank') {
             menuHtml = `
@@ -1328,12 +1359,25 @@ class HezlPromptWidget {
             this.expandedFolders.add(folderPath);
         }
         this.renderFolderTree();
+        this.saveStateToWidget(); 
     }
     
     async selectFolder(path, type) {
         this.currentFolder = path;
         this.currentFolderType = type;
+        this.saveStateToWidget(); 
         
+        const addBtn = this.container.querySelector('#hezl-add-prompt-btn');
+        const descArea = this.container.querySelector('#hezl-csv-description');
+        
+        if (type === 'csv') {
+            if(addBtn) addBtn.style.display = 'inline-flex';
+            if(descArea) descArea.style.display = 'flex';
+        } else {
+            if(addBtn) addBtn.style.display = 'none';
+            if(descArea) descArea.style.display = 'none';
+        }
+
         this.folderTree.querySelectorAll('.hezl-folder-item').forEach(item => {
             item.classList.remove('selected');
             if (item.dataset.path === path) {
@@ -1355,23 +1399,52 @@ class HezlPromptWidget {
         this.currentFolder = '';
         this.currentFolderType = '';
         this.promptsData = [];
+        this.saveStateToWidget(); 
         
+        const addBtn = this.container.querySelector('#hezl-add-prompt-btn');
+        const descArea = this.container.querySelector('#hezl-csv-description');
+        if(addBtn) addBtn.style.display = 'none';
+        if(descArea) descArea.style.display = 'none';
+
         this.folderTree.querySelectorAll('.hezl-folder-item').forEach(item => {
             item.classList.remove('selected');
         });
         
-        this.promptList.innerHTML = '<div class="hezl-empty-state">请选择左侧分类查看词组</div>';
+        this.promptList.innerHTML = '<div style="text-align:center; padding: 40px; color:#666; font-size:12px; width:100%;">请在左侧选择一个 CSV 文件查看词组</div>';
     }
     
     renderPromptList() {
-        if (this.promptsData.length === 0) {
-            this.promptList.innerHTML = '<div class="hezl-empty-state">暂无词组</div>';
+        if (this.currentFolderType === 'csv') {
+            const descPrompt = this.promptsData.find(p => p.title === '__DESCRIPTION__');
+            const descArea = this.container.querySelector('#hezl-csv-description');
+            if (descArea) {
+                const textSpan = descArea.querySelector('.text');
+                if (descPrompt && descPrompt.content) {
+                    textSpan.textContent = descPrompt.content;
+                    textSpan.style.color = '#ddd';
+                } else {
+                    textSpan.textContent = '暂无说明，点击右侧编辑添加...';
+                    textSpan.style.color = '#666';
+                }
+                
+                descArea.querySelector('#hezl-edit-desc-btn').onclick = () => {
+                    this.showEditDescriptionModal(descPrompt ? descPrompt.content : '');
+                };
+            }
+        }
+
+        const visiblePrompts = this.promptsData.filter(p => p.title !== '__DESCRIPTION__');
+
+        if (visiblePrompts.length === 0) {
+            this.promptList.innerHTML = '<div style="text-align:center; padding: 40px; color:#666; font-size:12px; width:100%;">此 CSV 中暂无词组，请点击上方添加</div>';
             return;
         }
         
         let html = '';
         for (let index = 0; index < this.promptsData.length; index++) {
             const prompt = this.promptsData[index];
+            if (prompt.title === '__DESCRIPTION__') continue; 
+
             const uid = this.getUid(prompt);
             const isSelected = this.selectedPrompts.some(p => this.getUid(p) === uid);
             html += `
@@ -1381,7 +1454,7 @@ class HezlPromptWidget {
                      data-source="${this.escapeHtml(prompt.source || this.currentFolder)}"
                      data-index="${index}">
                     <div class="hezl-prompt-item-content">
-                        <div class="hezl-prompt-title">${this.escapeHtml(prompt.title)}</div>
+                        <div class="hezl-prompt-title ${isSelected ? 'selected' : ''}">${this.escapeHtml(prompt.title)}</div>
                     </div>
                     <button class="hezl-prompt-edit-btn" data-title="${this.escapeHtml(prompt.title)}">编辑</button>
                 </div>
@@ -1510,6 +1583,71 @@ class HezlPromptWidget {
             this.filterPrompts(promptSearchInput.value.toLowerCase(), type);
         }
     }
+
+    async showEditDescriptionModal(oldText) {
+        const modal = document.createElement('div');
+        modal.className = 'hezl-modal';
+        modal.innerHTML = `
+            <div class="hezl-modal-content">
+                <div class="hezl-modal-header">编辑该 CSV 文件的说明和描述：</div>
+                <div class="hezl-form-group">
+                    <label class="hezl-form-label">说明内容</label>
+                    <textarea class="hezl-form-textarea" id="hezl-desc-content" placeholder="输入关于此CSV文件的详细说明...">${this.escapeHtml(oldText)}</textarea>
+                </div>
+                <div class="hezl-modal-actions">
+                    <button class="hezl-btn warning" id="hezl-modal-clear" style="margin-right: auto;">清空</button>
+                    <button class="hezl-btn cancel" id="hezl-modal-cancel">取消</button>
+                    <button class="hezl-btn success" id="hezl-modal-save">保存</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        modal.querySelector('#hezl-modal-cancel').addEventListener('click', () => {
+            modal.remove();
+        });
+
+        modal.querySelector('#hezl-modal-clear').addEventListener('click', () => {
+            const contentArea = modal.querySelector('#hezl-desc-content');
+            contentArea.value = '';
+            contentArea.focus();
+        });
+        
+        modal.querySelector('#hezl-modal-save').addEventListener('click', async () => {
+            const newText = modal.querySelector('#hezl-desc-content').value.trim();
+            const folder = this.currentFolder;
+            
+            try {
+                if (!oldText && newText) {
+                    await fetch('/hezl_prompt/add_prompt', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ folder: folder, title: '__DESCRIPTION__', content: newText })
+                    });
+                } else if (oldText && newText) {
+                    await fetch('/hezl_prompt/update_prompt', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ folder: folder, old_title: '__DESCRIPTION__', new_title: '__DESCRIPTION__', new_content: newText })
+                    });
+                } else if (oldText && !newText) {
+                    await fetch('/hezl_prompt/delete_prompt', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ folder: folder, title: '__DESCRIPTION__' })
+                    });
+                }
+                
+                modal.remove();
+                await this.selectFolder(folder, 'csv');
+            } catch (error) {
+                alert('保存说明失败: ' + error.message);
+            }
+        });
+        
+        this.setupModalClose(modal);
+    }
     
     async showEditPromptModal(promptTitle, promptSource = null) {
         const prompt = this.promptsData.find(p => {
@@ -1536,7 +1674,7 @@ class HezlPromptWidget {
                 </div>
                 <div class="hezl-modal-actions">
                     <button class="hezl-btn warning" id="hezl-modal-clear" style="margin-right: auto;">清空</button>
-                    <button class="hezl-btn" id="hezl-modal-cancel">取消</button>
+                    <button class="hezl-btn cancel" id="hezl-modal-cancel">取消</button>
                     <button class="hezl-btn success" id="hezl-modal-save">保存</button>
                 </div>
             </div>
@@ -1560,6 +1698,10 @@ class HezlPromptWidget {
             
             if (!newTitle) {
                 alert('请输入标题');
+                return;
+            }
+            if (newTitle === '__DESCRIPTION__') {
+                alert('__DESCRIPTION__ 是保留关键字，请使用其他标题');
                 return;
             }
             
@@ -1643,7 +1785,7 @@ class HezlPromptWidget {
                     <textarea class="hezl-form-textarea" id="hezl-add-content" placeholder="输入内容"></textarea>
                 </div>
                 <div class="hezl-modal-actions">
-                    <button class="hezl-btn" id="hezl-modal-cancel">取消</button>
+                    <button class="hezl-btn cancel" id="hezl-modal-cancel">取消</button>
                     <button class="hezl-btn success" id="hezl-modal-save">保存</button>
                 </div>
             </div>
@@ -1661,6 +1803,10 @@ class HezlPromptWidget {
             
             if (!newTitle) {
                 alert('请输入标题');
+                return;
+            }
+            if (newTitle === '__DESCRIPTION__') {
+                alert('__DESCRIPTION__ 是保留关键字，请使用其他标题');
                 return;
             }
             
@@ -1794,7 +1940,7 @@ class HezlPromptWidget {
     
     renderPreview() {
         if (this.selectedPrompts.length === 0) {
-            this.previewContainer.innerHTML = '<div class="hezl-empty-state" style="width: 100%; padding: 15px;">点击上方词组添加到预览</div>';
+            this.previewContainer.innerHTML = '<div style="text-align:center; padding: 15px; color:#666; font-size:12px; width:100%;user-select: none;">点击上方词组添加到预览</div>';
             return;
         }
         
@@ -2094,16 +2240,7 @@ class HezlPromptWidget {
         const output = parts.join(', ');
         this.outputText.textContent = output;
         
-        if (this.node && this.node.widgets) {
-            const widget = this.node.widgets.find(w => w.name === 'selected_prompts');
-            if (widget) {
-                widget.value = JSON.stringify({
-                    prompts: this.selectedPrompts,
-                    weights: this.promptWeights,
-                    disabled: this.promptDisabled
-                });
-            }
-        }
+        this.saveStateToWidget(); 
     }
     
     clearFolderSelection(folderPath) {
@@ -2167,7 +2304,7 @@ class HezlPromptWidget {
                     <input type="text" class="hezl-form-input" id="hezl-folder-name" placeholder="输入文件夹名称">
                 </div>
                 <div class="hezl-modal-actions">
-                    <button class="hezl-btn" id="hezl-modal-cancel">取消</button>
+                    <button class="hezl-btn cancel" id="hezl-modal-cancel">取消</button>
                     <button class="hezl-btn success" id="hezl-modal-save">创建</button>
                 </div>
             </div>
@@ -2227,13 +2364,13 @@ class HezlPromptWidget {
         modal.className = 'hezl-modal';
         modal.innerHTML = `
             <div class="hezl-modal-content">
-                <div class="hezl-modal-header">新建CSV文件</div>
+                <div class="hezl-modal-header">新建 CSV 文件</div>
                 <div class="hezl-form-group">
                     <label class="hezl-form-label">文件名称</label>
                     <input type="text" class="hezl-form-input" id="hezl-csv-name" placeholder="输入文件名称（不需要.csv后缀）">
                 </div>
                 <div class="hezl-modal-actions">
-                    <button class="hezl-btn" id="hezl-modal-cancel">取消</button>
+                    <button class="hezl-btn cancel" id="hezl-modal-cancel">取消</button>
                     <button class="hezl-btn success" id="hezl-modal-save">创建</button>
                 </div>
             </div>
@@ -2298,7 +2435,7 @@ class HezlPromptWidget {
                     <input type="text" class="hezl-form-input" id="hezl-new-name" value="${folderName}" placeholder="输入新名称">
                 </div>
                 <div class="hezl-modal-actions">
-                    <button class="hezl-btn" id="hezl-modal-cancel">取消</button>
+                    <button class="hezl-btn cancel" id="hezl-modal-cancel">取消</button>
                     <button class="hezl-btn success" id="hezl-modal-save">保存</button>
                 </div>
             </div>
@@ -2358,14 +2495,14 @@ class HezlPromptWidget {
         modal.className = 'hezl-modal';
         modal.innerHTML = `
             <div class="hezl-modal-content">
-                <div class="hezl-modal-header">\u91cd\u547d\u540dCSV\u6587\u4ef6</div>
+                <div class="hezl-modal-header">重命名 CSV 文件</div>
                 <div class="hezl-form-group">
-                    <label class="hezl-form-label">\u65b0\u540d\u79f0</label>
+                    <label class="hezl-form-label">新名称</label>
                     <input type="text" class="hezl-form-input" id="hezl-new-csv-name" value="${this.escapeHtml(baseName)}" placeholder="\u8f93\u5165\u65b0\u540d\u79f0">
                 </div>
                 <div class="hezl-modal-actions">
-                    <button class="hezl-btn" id="hezl-modal-cancel">\u53d6\u6d88</button>
-                    <button class="hezl-btn success" id="hezl-modal-save">\u4fdd\u5b58</button>
+                    <button class="hezl-btn cancel" id="hezl-modal-cancel">取消</button>
+                    <button class="hezl-btn success" id="hezl-modal-save">保存</button>
                 </div>
             </div>
         `;
@@ -2411,6 +2548,7 @@ class HezlPromptWidget {
                     if (this.currentFolder === path) {
                         this.currentFolder = newPath;
                         this.currentFolderType = 'csv';
+                        this.saveStateToWidget(); 
                     }
                     modal.remove();
                     this.loadFolderStructure();
@@ -2471,8 +2609,9 @@ class HezlPromptWidget {
                 this.updateOutput();
                 this.currentFolder = '';
                 this.currentFolderType = '';
+                this.saveStateToWidget(); 
                 this.loadFolderStructure();
-                this.promptList.innerHTML = '<div class="hezl-empty-state">请选择左侧分类查看词组</div>';
+                this.promptList.innerHTML = '<div style="text-align:center; padding: 40px; color:#666; font-size:12px; width:100%;">请在左侧选择一个 CSV 文件查看词组</div>';
             } else {
                 alert('删除失败: ' + result.error);
             }
@@ -2509,8 +2648,9 @@ class HezlPromptWidget {
                 this.updateOutput();
                 this.currentFolder = '';
                 this.currentFolderType = '';
+                this.saveStateToWidget(); 
                 this.loadFolderStructure();
-                this.promptList.innerHTML = '<div class="hezl-empty-state">请选择左侧分类查看词组</div>';
+                this.promptList.innerHTML = '<div style="text-align:center; padding: 40px; color:#666; font-size:12px; width:100%;">请在左侧选择一个 CSV 文件查看词组</div>';
             } else {
                 alert('删除失败: ' + result.error);
             }
@@ -2529,61 +2669,37 @@ class HezlPromptWidget {
 app.registerExtension({
     name: "hezl.prompt.manager",
     
-    async beforeRegisterNodeDef(nodeType, nodeData, app) {
-        if (nodeData.name === "HezlPrompt") {
-            const onNodeCreated = nodeType.prototype.onNodeCreated;
+    async nodeCreated(node, app) {
+        if (node.comfyClass === "HezlPrompt") {
+            const origWidget = node.widgets?.find(w => w.name === 'selected_prompts');
+            if (origWidget) {
+                origWidget.hidden = true; 
+            }
             
-            nodeType.prototype.onNodeCreated = function() {
-                const result = onNodeCreated?.apply(this, arguments);
-                
-                const widget = this.widgets?.find(w => w.name === 'selected_prompts');
-                if (widget) {
-                    widget.hidden = true;
-                }
-                
-                const hezlWidget = new HezlPromptWidget(this, 'selected_prompts', {}, app);
-                
-                this.addDOMWidget('hezl_prompt_ui', 'hezl_prompt', hezlWidget.container, {
-                    getValue: () => {
-                        return JSON.stringify({
-                            prompts: hezlWidget.selectedPrompts,
-                            weights: hezlWidget.promptWeights,
-                            disabled: hezlWidget.promptDisabled
-                        });
-                    },
-                    setValue: (value) => {
-                        try {
-                            const data = JSON.parse(value);
-                            hezlWidget.selectedPrompts = data.prompts || [];
-                            hezlWidget.promptWeights = {};
-                            hezlWidget.promptDisabled = {};
-                            
-                            const migrateState = (sourceObj, targetObj) => {
-                                if (!sourceObj) return;
-                                for (let k in sourceObj) {
-                                    if (k.includes('::')) {
-                                        targetObj[k] = sourceObj[k];
-                                    } else {
-                                        const p = hezlWidget.selectedPrompts.find(p => p.title === k);
-                                        if (p) {
-                                            targetObj[hezlWidget.getUid(p)] = sourceObj[k];
-                                        } else {
-                                            targetObj[k] = sourceObj[k];
-                                        }
-                                    }
-                                }
-                            };
-                            
-                            migrateState(data.weights, hezlWidget.promptWeights);
-                            migrateState(data.disabled, hezlWidget.promptDisabled);
-                            
-                            hezlWidget.syncSelectionState();
-                        } catch (e) {}
-                    }
-                });
-                
-                return result;
-            };
+            const hezlWidget = new HezlPromptWidget(node, 'selected_prompts', {}, app);
+            node.hezlWidgetInstance = hezlWidget;
+            
+            const domWidget = node.addDOMWidget('hezl_prompt_ui', 'hezl_prompt', hezlWidget.container, {
+                getValue: () => null, 
+                setValue: () => {}
+            });
+            
+            if (domWidget) {
+                domWidget.serializeValue = false; 
+            }
+            
+            if (origWidget && origWidget.value) {
+                hezlWidget.loadStateFromValue(origWidget.value);
+            }
+        }
+    },
+
+    async loadedGraphNode(node, app) {
+        if (node.comfyClass === "HezlPrompt") {
+            const origWidget = node.widgets?.find(w => w.name === 'selected_prompts');
+            if (origWidget && node.hezlWidgetInstance) {
+                node.hezlWidgetInstance.loadStateFromValue(origWidget.value);
+            }
         }
     }
 });
