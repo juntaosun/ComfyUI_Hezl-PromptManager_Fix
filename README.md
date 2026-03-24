@@ -44,7 +44,8 @@
 4. 文件夹统计已勾选的词组，点击可取消勾选此文件夹已勾选的词组
 
 ### csv提示词数据  
-数据路径 【```\Comfyui_Hezl-Prompt\csv】  
+原数据路径 【```\Comfyui_Hezl-Prompt\csv】  
+数据迁移至 ComfyUI\user\PromptManager\csv ( 特别注意! )
 
 |title|content|
 | ----------- | ----------- |
